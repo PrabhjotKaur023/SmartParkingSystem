@@ -18,10 +18,24 @@ def dashboard(request):
         is_occupied=True
     ).count()
 
+    total_vehicles = Vehicle.objects.count()
+
+    total_revenue = sum(
+        record.amount
+        for record in ParkingRecord.objects.all()
+    )
+
+    recent_records = ParkingRecord.objects.order_by(
+        '-entry_time'
+    )[:5]
+
     context = {
         'total_slots': total_slots,
         'available_slots': available_slots,
-        'occupied_slots': occupied_slots
+        'occupied_slots': occupied_slots,
+        'total_vehicles': total_vehicles,
+        'total_revenue': total_revenue,
+        'recent_records': recent_records
     }
 
     return render(

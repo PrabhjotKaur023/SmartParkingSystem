@@ -62,7 +62,68 @@
     </a>
 
 </div>
+<div class="row mt-4">
 
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body text-center">
+                <h5>Total Vehicles</h5>
+                <h2>{{ total_vehicles }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body text-center">
+                <h5>Total Revenue</h5>
+                <h2>₹{{ total_revenue }}</h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+<hr class="mt-5">
+
+<h3>Recent Parking Activity</h3>
+
+<table class="table table-bordered mt-3">
+
+    <thead>
+
+        <tr>
+            <th>Vehicle</th>
+            <th>Slot</th>
+            <th>Entry Time</th>
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        {% for record in recent_records %}
+
+        <tr>
+
+            <td>
+                {{ record.vehicle.vehicle_number }}
+            </td>
+
+            <td>
+                {{ record.slot.slot_number }}
+            </td>
+
+            <td>
+                {{ record.entry_time }}
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
 </div>
 
 </body>
