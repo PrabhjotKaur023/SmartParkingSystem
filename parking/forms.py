@@ -18,3 +18,10 @@ class VehicleExitForm(forms.Form):
         max_length=20,
         label="Vehicle Number"
     )
+
+
+class VehicleSearchForm(forms.Form):
+    vehicle_number = forms.CharField(
+        max_length=20,
+        label="Vehicle Number"
+    )

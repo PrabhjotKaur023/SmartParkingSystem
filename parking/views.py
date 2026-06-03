@@ -1,9 +1,13 @@
 from django.shortcuts import render
-from .forms import VehicleEntryForm, VehicleExitForm
-from .models import ParkingSlot, Vehicle, ParkingRecord
-from .forms import VehicleEntryForm
 from django.utils import timezone
-from datetime import timedelta
+
+from .models import ParkingSlot, Vehicle, ParkingRecord
+
+from .forms import (
+    VehicleEntryForm,
+    VehicleExitForm,
+    VehicleSearchForm
+)
 
 
 def dashboard(request):
@@ -92,6 +96,8 @@ def vehicle_entry(request):
         'parking/vehicle_entry.html',
         {'form': form}
     )
+
+
 def vehicle_exit(request):
 
     if request.method == 'POST':
@@ -157,4 +163,49 @@ def vehicle_exit(request):
         request,
         'parking/vehicle_exit.html',
         {'form': form}
+    )
+
+
+def search_vehicle(request):
+
+    vehicle_data = None
+
+    if request.method == 'POST':
+
+        form = VehicleSearchForm(request.POST)
+
+        if form.is_valid():
+
+            vehicle_number = form.cleaned_data[
+                'vehicle_number'
+            ]
+
+            try:
+
+                vehicle = Vehicle.objects.get(
+                    vehicle_number=vehicle_number
+                )
+
+                record = ParkingRecord.objects.filter(
+                    vehicle=vehicle
+                ).order_by('-entry_time').first()
+
+                vehicle_data = {
+                    'vehicle': vehicle,
+                    'record': record
+                }
+
+            except Vehicle.DoesNotExist:
+                vehicle_data = None
+
+    else:
+        form = VehicleSearchForm()
+
+    return render(
+        request,
+        'parking/search_vehicle.html',
+        {
+            'form': form,
+            'vehicle_data': vehicle_data
+        }
     )
