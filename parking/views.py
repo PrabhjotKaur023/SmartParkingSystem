@@ -2,7 +2,10 @@ from django.shortcuts import render
 from django.utils import timezone
 
 from .models import ParkingSlot, Vehicle, ParkingRecord
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
+from .serializers import VehicleSerializer
 from .forms import (
     VehicleEntryForm,
     VehicleExitForm,
@@ -209,3 +212,14 @@ def search_vehicle(request):
             'vehicle_data': vehicle_data
         }
     )
+@api_view(['GET'])
+def vehicle_api(request):
+
+    vehicles = Vehicle.objects.all()
+
+    serializer = VehicleSerializer(
+        vehicles,
+        many=True
+    )
+
+    return Response(serializer.data)

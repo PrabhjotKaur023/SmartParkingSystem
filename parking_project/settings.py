@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'parking',
     'accounts',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
