@@ -1,28 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Parking Management System</title>
+    <title>Smart Parking Dashboard</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<body>
-
-<nav class="navbar navbar-dark bg-dark">
-    <div class="container">
-        <span class="navbar-brand mb-0 h1">
-            🚗 Smart Parking Management System
-        </span>
-    </div>
-</nav>
+<body style="background:#f4f6f9;">
 
 <div class="container mt-5">
 
+    <h1 class="mb-4">
+        🚗 Smart Parking Dashboard
+    </h1>
+
     <div class="row">
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card shadow">
                 <div class="card-body text-center">
                     <h5>Total Slots</h5>
@@ -31,109 +25,102 @@
             </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card shadow">
                 <div class="card-body text-center">
-                    <h5>Available Slots</h5>
+                    <h5>Available</h5>
                     <h2>{{ available_slots }}</h2>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card shadow">
                 <div class="card-body text-center">
-                    <h5>Occupied Slots</h5>
+                    <h5>Occupied</h5>
                     <h2>{{ occupied_slots }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    <h5>Revenue</h5>
+                    <h2>₹{{ total_revenue }}</h2>
                 </div>
             </div>
         </div>
 
     </div>
 
-    <div class="mt-5">
+    <div class="card shadow mt-5">
 
-    <a href="{% url 'vehicle_entry' %}" class="btn btn-success me-2">
-        Vehicle Entry
-    </a>
-
-    <a href="{% url 'vehicle_exit' %}" class="btn btn-danger">
-        Vehicle Exit
-    </a>
-
-    <a href="{% url 'search_vehicle' %}"
-   class="btn btn-primary ms-2">
-   Search Vehicle
-</a>
-
-<a href="{% url 'search_vehicle' %}"
-   class="btn btn-primary">
-   Search Vehicle
-</a>
-
-</div>
-<div class="row mt-4">
-
-    <div class="col-md-6">
-        <div class="card shadow">
-            <div class="card-body text-center">
-                <h5>Total Vehicles</h5>
-                <h2>{{ total_vehicles }}</h2>
-            </div>
+        <div class="card-header">
+            Recent Parking Activity
         </div>
+
+        <div class="card-body">
+
+            <table class="table table-hover">
+
+                <thead>
+                    <tr>
+                        <th>Vehicle</th>
+                        <th>Slot</th>
+                        <th>Entry Time</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                {% for record in recent_records %}
+
+                    <tr>
+
+                        <td>
+                            {{ record.vehicle.vehicle_number }}
+                        </td>
+
+                        <td>
+                            {{ record.slot.slot_number }}
+                        </td>
+
+                        <td>
+                            {{ record.entry_time }}
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
     </div>
 
-    <div class="col-md-6">
-        <div class="card shadow">
-            <div class="card-body text-center">
-                <h5>Total Revenue</h5>
-                <h2>₹{{ total_revenue }}</h2>
-            </div>
-        </div>
+    <div class="mt-4">
+
+        <a href="{% url 'vehicle_entry' %}"
+           class="btn btn-success">
+            Vehicle Entry
+        </a>
+
+        <a href="{% url 'vehicle_exit' %}"
+           class="btn btn-danger">
+            Vehicle Exit
+        </a>
+
+        <a href="{% url 'search_vehicle' %}"
+           class="btn btn-primary">
+            Search Vehicle
+        </a>
+
     </div>
 
-</div>
-<hr class="mt-5">
-
-<h3>Recent Parking Activity</h3>
-
-<table class="table table-bordered mt-3">
-
-    <thead>
-
-        <tr>
-            <th>Vehicle</th>
-            <th>Slot</th>
-            <th>Entry Time</th>
-        </tr>
-
-    </thead>
-
-    <tbody>
-
-        {% for record in recent_records %}
-
-        <tr>
-
-            <td>
-                {{ record.vehicle.vehicle_number }}
-            </td>
-
-            <td>
-                {{ record.slot.slot_number }}
-            </td>
-
-            <td>
-                {{ record.entry_time }}
-            </td>
-
-        </tr>
-
-        {% endfor %}
-
-    </tbody>
-
-</table>
 </div>
 
 </body>
