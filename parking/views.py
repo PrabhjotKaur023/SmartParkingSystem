@@ -1,7 +1,9 @@
 from django.shortcuts import render
-
+from .forms import VehicleEntryForm, VehicleExitForm
 from .models import ParkingSlot, Vehicle, ParkingRecord
 from .forms import VehicleEntryForm
+from django.utils import timezone
+from datetime import timedelta
 
 
 def dashboard(request):
@@ -74,5 +76,71 @@ def vehicle_entry(request):
     return render(
         request,
         'parking/vehicle_entry.html',
+        {'form': form}
+    )
+def vehicle_exit(request):
+
+    if request.method == 'POST':
+
+        form = VehicleExitForm(request.POST)
+
+        if form.is_valid():
+
+            vehicle_number = form.cleaned_data['vehicle_number']
+
+            try:
+
+                vehicle = Vehicle.objects.get(
+                    vehicle_number=vehicle_number
+                )
+
+                record = ParkingRecord.objects.filter(
+                    vehicle=vehicle,
+                    exit_time__isnull=True
+                ).first()
+
+                if record:
+
+                    record.exit_time = timezone.now()
+
+                    duration = (
+                        record.exit_time -
+                        record.entry_time
+                    )
+
+                    hours = max(
+                        1,
+                        duration.total_seconds() / 3600
+                    )
+
+                    fee = round(hours * 20, 2)
+
+                    record.amount = fee
+                    record.save()
+
+                    slot = record.slot
+                    slot.is_occupied = False
+                    slot.save()
+
+                    return render(
+                        request,
+                        'parking/receipt.html',
+                        {
+                            'vehicle': vehicle,
+                            'slot': slot,
+                            'fee': fee,
+                            'hours': round(hours, 2)
+                        }
+                    )
+
+            except Vehicle.DoesNotExist:
+                pass
+
+    else:
+        form = VehicleExitForm()
+
+    return render(
+        request,
+        'parking/vehicle_exit.html',
         {'form': form}
     )

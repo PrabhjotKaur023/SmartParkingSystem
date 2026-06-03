@@ -11,3 +11,10 @@ class VehicleEntryForm(forms.Form):
             ('Bike', 'Bike')
         ]
     )
+
+
+class VehicleExitForm(forms.Form):
+    vehicle_number = forms.CharField(
+        max_length=20,
+        label="Vehicle Number"
+    )

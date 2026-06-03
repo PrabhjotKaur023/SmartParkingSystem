@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Receipt</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container mt-5">
+
+    <div class="card shadow p-4">
+
+        <h2>Parking Receipt</h2>
+
+        <hr>
+
+        <p>
+            <strong>Vehicle:</strong>
+            {{ vehicle.vehicle_number }}
+        </p>
+
+        <p>
+            <strong>Slot:</strong>
+            {{ slot.slot_number }}
+        </p>
+
+        <p>
+            <strong>Hours:</strong>
+            {{ hours }}
+        </p>
+
+        <p>
+            <strong>Fee:</strong>
+            ₹{{ fee }}
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>
