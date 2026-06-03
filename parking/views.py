@@ -1,5 +1,7 @@
 from django.shortcuts import render
-from .models import ParkingSlot
+
+from .models import ParkingSlot, Vehicle, ParkingRecord
+from .forms import VehicleEntryForm
 
 
 def dashboard(request):
@@ -24,4 +26,53 @@ def dashboard(request):
         request,
         'parking/dashboard.html',
         context
+    )
+
+
+def vehicle_entry(request):
+
+    if request.method == 'POST':
+
+        form = VehicleEntryForm(request.POST)
+
+        if form.is_valid():
+
+            vehicle_number = form.cleaned_data['vehicle_number']
+            owner_name = form.cleaned_data['owner_name']
+            vehicle_type = form.cleaned_data['vehicle_type']
+
+            slot = ParkingSlot.objects.filter(
+                is_occupied=False,
+                vehicle_type=vehicle_type
+            ).first()
+
+            if slot:
+
+                vehicle = Vehicle.objects.create(
+                    vehicle_number=vehicle_number,
+                    owner_name=owner_name,
+                    vehicle_type=vehicle_type
+                )
+
+                ParkingRecord.objects.create(
+                    vehicle=vehicle,
+                    slot=slot
+                )
+
+                slot.is_occupied = True
+                slot.save()
+
+                return render(
+                    request,
+                    'parking/success.html',
+                    {'slot': slot}
+                )
+
+    else:
+        form = VehicleEntryForm()
+
+    return render(
+        request,
+        'parking/vehicle_entry.html',
+        {'form': form}
     )
